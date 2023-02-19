@@ -6,8 +6,10 @@ export default class Game {
         this.cells = []
         this.set_for_toggle = []
         this.canvas = canvas
-        this.game_speed = 500
-
+        this.ctx = this.canvas.getContext('2d');
+        this.game_speed = 200
+        this.running = false
+        
         this.init()
     }
     
@@ -30,7 +32,7 @@ export default class Game {
         this.canvas.addEventListener('click', e => {
             let mouse_x = e.clientX - this.canvas.offsetLeft
             let mouse_y = e.clientY - this.canvas.offsetTop
-
+            
             this.cells.forEach(cell => {
                 if (cell.is_clicked(mouse_x, mouse_y)) {
                     cell.toggle()
@@ -40,17 +42,30 @@ export default class Game {
         
     }
     
-    update(context) {
-        context.fillStyle = '#727070'
-        context.fillRect(0, 0, this.canvas.width, this.canvas.height)
-        this.cells.forEach(cell => cell.draw(context))
-        requestAnimationFrame(() => this.update(context))
+    update(timestamp) {
+        
+        this.ctx.fillStyle = '#727070'
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+        this.cells.forEach(cell => cell.draw(this.ctx))
+        
+        if (this.running) this.run()
+        
+        
+        
+        
+        this.prev_time_stamp = timestamp
+
+        setTimeout(() => {
+            requestAnimationFrame((timestamp) => this.update(timestamp))
+        }, this.game_speed)
+
+        //requestAnimationFrame((timestamp) => this.update(timestamp))
     }
     
     run() {
         // If all cells are inactive, alert user
         if (this.cells.every(cell => !cell.is_active)) {
-            console.log('Cleared')
+            this.running = false
         }
         
         else {
