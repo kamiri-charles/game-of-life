@@ -1,8 +1,9 @@
-import Game from "./modules/Game.js"
+import Game from "./modules/Game.js";
 
 document.addEventListener('DOMContentLoaded', () => {
 
     /** @type {HTMLCanvasElement} */ 
+
     const canvas = document.getElementById('canvas')
     let run_btn = document.getElementById('run')
     canvas.width = 600
